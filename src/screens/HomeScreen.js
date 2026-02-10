@@ -12,8 +12,16 @@ export default function HomeScreen({ navigation }) {
   const player = useVideoPlayer(require('../../assets/background.mp4'), (player) => {
     player.loop = true;
     player.muted = true;
-    player.play();
   });
+
+  React.useEffect(() => {
+    // `useVideoPlayer` runs before the <VideoView /> mounts; autoplay needs to happen after mount on web.
+    const id = setTimeout(() => {
+      player.play();
+    }, 0);
+
+    return () => clearTimeout(id);
+  }, [player]);
 
   return (
     <View style={styles.container}>
