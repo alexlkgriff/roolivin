@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Linking, Dimensions } from 'react-native';
-import { Video } from 'expo-video';
+import { VideoView, useVideoPlayer } from 'expo-video';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, spacing } from '../theme';
@@ -9,17 +9,23 @@ const { width, height } = Dimensions.get('window');
 const DONATION_URL = 'https://your-donation-page-or-stripe-checkout-link';
 
 export default function HomeScreen({ navigation }) {
+  const player = useVideoPlayer(require('../../assets/background.mp4'), (player) => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+
   return (
     <View style={styles.container}>
 
       {/* FULLSCREEN BACKGROUND VIDEO */}
-      <Video
-        source={require('../../assets/background.mp4')}
+      <VideoView
+        player={player}
         style={styles.backgroundVideo}
-        resizeMode="cover"
-        shouldPlay
-        isLooping
-        isMuted
+        nativeControls={false}
+        contentFit="cover"
+        playsInline
+        pointerEvents="none"
       />
 
       {/* CENTERED GLASS PANEL */}
