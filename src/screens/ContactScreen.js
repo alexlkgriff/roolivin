@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView, Linking } from 'react-native';
 import { colors, spacing } from '../theme';
 
-const CONTACT_ENDPOINT = 'https://your-api-id.execute-api.us-west-2.amazonaws.com/prod/contact';
+const SUPPORT_EMAIL = 'support@rootedlivinginitiative.org';
 
 export default function ContactScreen() {
   const [name, setName] = useState('');
@@ -18,22 +18,26 @@ export default function ContactScreen() {
 
     try {
       setSubmitting(true);
-      const res = await fetch(CONTACT_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, message }),
-      });
 
-      if (!res.ok) throw new Error('Network response was not ok');
+      const subject = `Contact/Volunteer message from ${name}`;
+      const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n`;
+      const mailtoBase = `mailto:${SUPPORT_EMAIL}`;
+      const mailtoUrl = `${mailtoBase}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-      Alert.alert('Thank you!', 'Your message has been sent.');
+      const canOpen = await Linking.canOpenURL(mailtoBase);
+      if (!canOpen) {
+        Alert.alert('Email not available', `Please email us at ${SUPPORT_EMAIL}.`);
+        return;
+      }
+
+      await Linking.openURL(mailtoUrl);
+
+      Alert.alert('Almost done', 'Your email app is ready to send your message.');
       setName('');
       setEmail('');
       setMessage('');
     } catch (err) {
-      Alert.alert('Error', 'There was a problem sending your message.');
+      Alert.alert('Error', 'There was a problem opening your email app.');
     } finally {
       setSubmitting(false);
     }
@@ -76,7 +80,7 @@ export default function ContactScreen() {
           onPress={handleSubmit}
           disabled={submitting}
         >
-          <Text style={styles.buttonText}>{submitting ? 'Sending...' : 'Send Message'}</Text>
+          <Text style={styles.buttonText}>{submitting ? 'Opening email...' : 'Send Message'}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
