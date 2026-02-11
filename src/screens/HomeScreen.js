@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { colors, spacing } from '../theme';
 
 const { width, height } = Dimensions.get('window');
-const DONATION_URL = 'https://your-donation-page-or-stripe-checkout-link';
+const DONATION_URL = 'https://square.link/u/w3LkQ4w9';
 
 export default function HomeScreen({ navigation }) {
   const player = useVideoPlayer(require('../../assets/background.mp4'), (player) => {

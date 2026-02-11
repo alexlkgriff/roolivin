@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { colors, spacing } from '../theme';
 
-const DONATION_URL = 'https://your-donation-page-or-stripe-checkout-link';
+const DONATION_URL = 'https://square.link/u/w3LkQ4w9';
 
 export default function DonateScreen() {
   const handleDonate = () => {
